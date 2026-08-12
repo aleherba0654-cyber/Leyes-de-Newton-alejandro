@@ -1,664 +1,161 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-    <title>Leyes de Newton · Ghibli · Animación interactiva con valores reales</title>
-    <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        body {
-            font-family: 'Segoe UI', 'Quicksand', 'Poppins', system-ui, sans-serif;
-            background: linear-gradient(145deg, #b7d0c5 0%, #8ab3a3 40%, #6a8f7c 100%);
-            min-height: 100vh;
-            padding: 1.8rem;
-            position: relative;
-            overflow-x: hidden;
-        }
-
-        body::before {
-            content: "✨🍃🌿";
-            font-size: 70px;
-            position: fixed;
-            bottom: 20px;
-            left: 10px;
-            opacity: 0.2;
-            pointer-events: none;
-            transform: rotate(-15deg);
-            z-index: 0;
-        }
-
-        body::after {
-            content: "⭐🍂🐾";
-            font-size: 90px;
-            position: fixed;
-            top: 30px;
-            right: 20px;
-            opacity: 0.2;
-            pointer-events: none;
-            z-index: 0;
-        }
-
-        .ghibli-card {
-            max-width: 1350px;
-            width: 100%;
-            margin: 0 auto;
-            background: rgba(245, 240, 220, 0.88);
-            backdrop-filter: blur(8px);
-            border-radius: 3rem;
-            box-shadow: 0 30px 40px rgba(0, 0, 0, 0.2), inset 0 1px 4px rgba(255, 255, 200, 0.8);
-            padding: 1.8rem;
-            border: 2px solid rgba(255, 245, 190, 0.7);
-            position: relative;
-            z-index: 2;
-        }
-
-        .totoro-deco {
-            position: absolute;
-            bottom: -15px;
-            right: 25px;
-            width: 100px;
-            opacity: 0.85;
-            pointer-events: none;
-            z-index: 10;
-        }
-
-        h1 {
-            font-size: 2.5rem;
-            text-align: center;
-            background: linear-gradient(135deg, #3b2a1f, #7b4a2e, #cf9f4a);
-            -webkit-background-clip: text;
-            background-clip: text;
-            color: transparent;
-            text-shadow: 3px 3px 12px rgba(110, 70, 20, 0.3);
-        }
-
-        .subtitle-ghibli {
-            text-align: center;
-            font-size: 1rem;
-            color: #4f3b28;
-            background: #e7dbbc99;
-            display: inline-block;
-            width: auto;
-            margin: 0 auto 1.2rem;
-            padding: 0.3rem 1.8rem;
-            border-radius: 60px;
-            font-weight: 600;
-        }
-
-        .newton-studio {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 2rem;
-            margin-top: 1rem;
-        }
-
-        .problem-area {
-            flex: 1.3;
-            background: #fef6e0d9;
-            border-radius: 2rem;
-            padding: 1.5rem;
-            box-shadow: 0 15px 25px rgba(0, 0, 0, 0.1);
-            border: 1px solid #fae67a;
-        }
-
-        .animation-area {
-            flex: 1;
-            background: #cfe3cf70;
-            border-radius: 2rem;
-            padding: 1rem;
-            backdrop-filter: blur(2px);
-            border: 1px solid #e9dba9;
-        }
-
-        .enunciado-ghibli {
-            background: #fff2dfc9;
-            padding: 1.3rem;
-            border-radius: 1.8rem;
-            margin-bottom: 1.4rem;
-            border-left: 12px solid #f3b33d;
-            color: #2f2a24;
-        }
-
-        .question-ghibli {
-            background: #ffefb5;
-            padding: 0.7rem 1rem;
-            border-radius: 3rem;
-            margin-top: 1rem;
-            font-weight: bold;
-            color: #5a3e1f;
-            display: inline-block;
-            font-size: 0.95rem;
-        }
-
-        .input-group-ghibli {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 1rem;
-            margin: 1.5rem 0;
-        }
-
-        .field {
-            flex: 1;
-        }
-
-        .field label {
-            display: block;
-            font-weight: 700;
-            color: #4f3a22;
-            margin-bottom: 5px;
-            font-size: 0.85rem;
-        }
-
-        .field input {
-            width: 100%;
-            padding: 12px 14px;
-            border-radius: 60px;
-            border: 2px solid #e0ca93;
-            background: #fffff2;
-            font-size: 1rem;
-            outline: none;
-            transition: 0.2s;
-            font-weight: 500;
-        }
-
-        .field input:focus {
-            border-color: #f5b642;
-            box-shadow: 0 0 0 3px rgba(245, 182, 66, 0.4);
-        }
-
-        .btn-group {
-            display: flex;
-            gap: 14px;
-            flex-wrap: wrap;
-            margin-bottom: 1.2rem;
-        }
-
-        .btn {
-            border: none;
-            padding: 12px 24px;
-            font-weight: bold;
-            border-radius: 100px;
-            font-size: 1rem;
-            cursor: pointer;
-            transition: all 0.2s ease;
-            font-family: inherit;
-            background: #ecb176;
-            color: #2d2418;
-            box-shadow: 0 5px 0 #8b5a2b;
-            transform: translateY(-2px);
-        }
-
-        .btn:active {
-            transform: translateY(2px);
-            box-shadow: 0 2px 0 #8b5a2b;
-        }
-
-        .btn-primary {
-            background: #f3bc6e;
-            box-shadow: 0 5px 0 #b4622a;
-        }
-
-        .btn-random {
-            background: #9caf7b;
-            box-shadow: 0 5px 0 #5a6e3f;
-            color: #1f2c12;
-        }
-
-        .resultado-ghibli {
-            background: #e7cf9bdd;
-            border-radius: 2rem;
-            padding: 1rem 1.3rem;
-            margin-top: 1rem;
-            font-weight: 600;
-            color: #2e2b1f;
-            border: 1px solid #ffdd99;
-        }
-
-        .anim-tag {
-            text-align: center;
-            font-size: 0.8rem;
-            margin-top: 10px;
-            background: #fcf3cfaa;
-            border-radius: 30px;
-            padding: 6px;
-            color: #5e452b;
-        }
-
-        canvas {
-            display: block;
-            width: 100%;
-            height: auto;
-            background: radial-gradient(circle at 20% 30%, #cddfc7, #b1cbab);
-            border-radius: 2rem;
-            box-shadow: 0 8px 18px rgba(0,0,0,0.2);
-            border: 3px solid #fdebb3;
-        }
-
-        footer {
-            text-align: center;
-            margin-top: 2rem;
-            font-size: 0.75rem;
-            color: #2f3428;
-            background: #e8ddb0b3;
-            width: fit-content;
-            margin-left: auto;
-            margin-right: auto;
-            padding: 0.4rem 1.2rem;
-            border-radius: 60px;
-        }
-        @media (max-width: 780px) {
-            body { padding: 0.8rem; }
-            .ghibli-card { padding: 1rem; }
-        }
-    </style>
+  <meta charset="UTF-8">
+  <title>Sopa de Letras Interactiva</title>
+  <style>
+    body { font-family: Arial, sans-serif; text-align: center; }
+    table { border-collapse: collapse; margin: 20px auto; }
+    td {
+      border: 1px solid #333;
+      width: 30px; height: 30px;
+      text-align: center; font-weight: bold;
+      cursor: pointer;
+    }
+    .selected { background-color: yellow; }
+    .completed { text-decoration: line-through; color: gray; }
+    #score { font-size: 20px; margin-top: 10px; color: blue; }
+    #finalMessage {
+      display: none;
+      font-size: 24px;
+      font-weight: bold;
+      color: green;
+      margin-top: 20px;
+    }
+  </style>
 </head>
 <body>
-<div class="ghibli-card">
-    <div class="totoro-deco">
-        <svg width="100" height="100" viewBox="0 0 100 100" fill="none" xmlns="http://www.w3.org/2000/svg">
-            <circle cx="50" cy="55" r="32" fill="#7C8F6B" stroke="#4A5C3A" stroke-width="2"/>
-            <circle cx="35" cy="48" r="5" fill="#2C2B26"/>
-            <circle cx="65" cy="48" r="5" fill="#2C2B26"/>
-            <path d="M44 62 Q50 70 56 62" stroke="#2C2B26" stroke-width="2.5" fill="none"/>
-            <ellipse cx="50" cy="74" rx="12" ry="7" fill="#9EAA86"/>
-            <path d="M50 26 L55 18 L60 24 L50 26Z" fill="#9CAC7A"/>
-            <path d="M50 26 L45 18 L40 24 L50 26Z" fill="#9CAC7A"/>
-            <circle cx="50" cy="25" r="4" fill="#CFAA6E"/>
-        </svg>
-    </div>
-    <h1>🌿 Totoro y las Leyes de Newton 🌟</h1>
-    <div style="display: flex; justify-content: center;">
-        <div class="subtitle-ghibli">⚡ 2da Ley (F = m·a) | 3ra Ley · La animación se mueve según tus valores ⚡</div>
-    </div>
+  <h1>Sopa de Letras Educativa</h1>
+  <p>Lee la definición y encuentra la palabra en la sopa.</p>
 
-    <div class="newton-studio">
-        <div class="problem-area">
-            <div class="enunciado-ghibli" id="enunciadoContainer">
-                <p id="problemStatement">✨ Un problema del bosque encantado... ✨</p>
-                <div class="question-ghibli" id="questionText">🔍 Pregunta: Calcula la variable mágica.</div>
-            </div>
-            <div class="input-group-ghibli" id="inputGroup"></div>
-            <div class="btn-group">
-                <button id="solveBtn" class="btn btn-primary">🍃 Resolver con Totoro</button>
-                <button id="randomProblemBtn" class="btn btn-random">🎲 Nuevo problema + espíritu</button>
-            </div>
-            <div class="resultado-ghibli" id="resultDisplay">💫 Esperando la sabiduría de la física...</div>
-        </div>
-        <div class="animation-area">
-            <canvas id="physicsCanvas" width="460" height="280" style="width:100%; height:auto; max-width:460px; aspect-ratio:460/280"></canvas>
-            <div class="anim-tag" id="animDescription">🍄🍂 La animación se mueve según los valores que ingreses · Dinámica en tiempo real</div>
-        </div>
-    </div>
-    <footer>🌟 "La ciencia también es magia" — La animación responde a tus números: mayor fuerza = más movimiento 🌟</footer>
-</div>
+  <!-- Lista de definiciones -->
+  <div class="definitions">
+    <h3>Definiciones:</h3>
+    <ol id="listaDefiniciones">
+      <li data-word="DESARROLLOTIPICO">1. Proceso de crecimiento y aprendizaje que sigue los patrones esperados en la mayoría de los niños.</li>
+      <li data-word="DISCAPACIDAD">2. Condición que limita alguna actividad física, mental o sensorial de una persona.</li>
+      <li data-word="TRASTORNOSDEAPRENDIZAJE">3. Dificultades específicas que afectan la manera en que una persona adquiere conocimientos o habilidades académicas.</li>
+      <li data-word="OBSERVACION">4. Técnica que consiste en mirar y analizar el comportamiento o desempeño de alguien para obtener información.</li>
+      <li data-word="NECESIDADES">5. Requerimientos básicos o especiales que una persona necesita para desarrollarse adecuadamente.</li>
+      <li data-word="FAMILIA">6. Grupo de personas unidas por lazos de parentesco, afecto y apoyo mutuo.</li>
+      <li data-word="EVALUACION">7. Proceso de analizar y valorar el progreso o desempeño de una persona.</li>
+      <li data-word="ATIPICO">8. Desarrollo o comportamiento que no sigue los patrones comunes o esperados.</li>
+      <li data-word="ESTRATEGIAS">9. Métodos o planes diseñados para alcanzar un objetivo de aprendizaje o desarrollo.</li>
+      <li data-word="AVANCES">10. Progresos o mejoras que se logran en el aprendizaje o desarrollo.</li>
+      <li data-word="RECURSOSVISUALES">11. Materiales como imágenes, gráficos o videos que apoyan el aprendizaje.</li>
+      <li data-word="PSICOLOGO">12. Profesional que estudia y apoya el comportamiento, emociones y aprendizaje de las personas.</li>
+      <li data-word="EVALUACIONCONTINUA">13. Proceso de valorar de manera constante el progreso de una persona a lo largo del tiempo.</li>
+      <li data-word="PARTICIPACION">14. Acción de involucrarse y colaborar en actividades o procesos.</li>
+      <li data-word="APRENDIZAJE">15. Proceso mediante el cual una persona adquiere conocimientos, habilidades o valores.</li>
+      <li data-word="INCLUSION">16. Principio que busca integrar y valorar a todas las personas, respetando sus diferencias.</li>
+    </ol>
+  </div>
 
-<script>
-    (function(){
-        // Problemas con indicación de qué variable afecta la animación (fuerza, aceleración, masa, etc)
-        const PROBLEMS = [
-            {   id:1, ley:"Segunda Ley (Fuerza)", 
-                enunciado: "Un pequeño Susuwatari (carboncito) tiene masa m = ? kg y recibe una aceleración de a = ? m/s². ¿Cuál es la fuerza neta?",
-                pregunta: "Calcular la Fuerza (F) en Newtons.",
-                campos: [{ nombre:"masa", label:"🍃 Masa (kg)", placeholder:"ej: 2.5"},{ nombre:"aceleracion", label:"✨ Aceleración (m/s²)", placeholder:"ej: 3"}],
-                resolver: (v)=>{ let m=parseFloat(v.masa), a=parseFloat(v.aceleracion); if(isNaN(m)||isNaN(a)) return null; let F=m*a; return { resultado:F.toFixed(2), unidad:"N", formula:`F = m·a = ${m} × ${a} = ${F.toFixed(2)} N` }; },
-                tipoAnimacion:"segunda", variableDinamica: { tipo: "aceleracion", campoAceleracion: "aceleracion", campoMasa: "masa" } },
-            {   id:2, ley:"Segunda Ley (Masa)",
-                enunciado: "Kodama (espíritu) siente una fuerza F = ? N y aceleración a = ? m/s². ¿Cuál es su masa?",
-                pregunta: "Calcular la masa (kg).",
-                campos:[{ nombre:"fuerza", label:"⚡ Fuerza (N)", placeholder:"ej: 40"},{ nombre:"aceleracion", label:"🍃 Aceleración (m/s²)", placeholder:"ej: 8"}],
-                resolver:(v)=>{ let F=parseFloat(v.fuerza), a=parseFloat(v.aceleracion); if(isNaN(F)||isNaN(a)||a===0) return null; let m=F/a; return{ resultado:m.toFixed(2), unidad:"kg", formula:`m = F/a = ${F} / ${a} = ${m.toFixed(2)} kg`}; },
-                tipoAnimacion:"segunda", variableDinamica: { tipo: "aceleracion", campoAceleracion: "aceleracion", campoFuerza: "fuerza" } },
-            {   id:3, ley:"Segunda Ley (Aceleración)",
-                enunciado: "Un pequeño Totoro de masa m = ? kg es empujado con fuerza F = ? N. ¡Encuentra su aceleración!",
-                pregunta: "Calcular la aceleración (m/s²).",
-                campos:[{ nombre:"masa", label:"🐾 Masa (kg)", placeholder:"3.2"},{ nombre:"fuerza", label:"🍂 Fuerza (N)", placeholder:"12.8"}],
-                resolver:(v)=>{ let m=parseFloat(v.masa), F=parseFloat(v.fuerza); if(isNaN(m)||isNaN(F)||m===0) return null; let a=F/m; return{ resultado:a.toFixed(2), unidad:"m/s²", formula:`a = F/m = ${F} / ${m} = ${a.toFixed(2)} m/s²`}; },
-                tipoAnimacion:"segunda", variableDinamica: { tipo: "aceleracion", campoMasa: "masa", campoFuerza: "fuerza" } },
-            {   id:4, ley:"Tercera Ley (Acción-Reacción)",
-                enunciado: "Dos duendes Ghibli: duende A empuja a B con F_AB = ? N. ¿Fuerza de reacción?",
-                pregunta: "Magnitud de la fuerza de reacción (N).",
-                campos:[{ nombre:"fuerzaAccion", label:"🌿 Fuerza acción F_AB (N)", placeholder:"ej: 55"}],
-                resolver:(v)=>{ let f=parseFloat(v.fuerzaAccion); if(isNaN(f)) return null; return{ resultado:f.toFixed(2), unidad:"N", formula:`3ra Ley: |F_BA| = ${f} N`}; },
-                tipoAnimacion:"tercera_duendes", variableDinamica: { tipo: "fuerzaChoque", campoFuerza: "fuerzaAccion" } },
-            {   id:5, ley:"Tercera Ley (Contacto entre amigos)",
-                enunciado: "Soot sprite (m1) y Tiny Totoro (m2) se empujan con fuerza F_contacto = ? N. ¿Fuerza de reacción?",
-                pregunta: "Calcular la fuerza de reacción (módulo).",
-                campos:[{ nombre:"m1", label:"🖤 Masa 1 (kg)", placeholder:"1.5"},{ nombre:"m2", label:"💚 Masa 2 (kg)", placeholder:"2"},{ nombre:"fContacto", label:"🍄 Fuerza de contacto (N)", placeholder:"30"}],
-                resolver:(v)=>{ let f=parseFloat(v.fContacto); if(isNaN(f)) return null; return{ resultado:f.toFixed(2), unidad:"N", formula:`Reacción = ${f} N` }; },
-                tipoAnimacion:"tercera_contacto", variableDinamica: { tipo: "fuerzaContacto", campoFuerza: "fContacto" } }
-        ];
+  <!-- Sopa de letras -->
+  <table id="sopa"></table>
 
-        let currentProblem = null;
-        let canvas = document.getElementById('physicsCanvas');
-        let ctx = canvas.getContext('2d');
-        let animRequestId = null;
-        let currentDynamicValues = { fuerza: 10, aceleracion: 2, masa: 2 }; // valores por defecto
+  <!-- Puntuación -->
+  <div id="score">Puntos: 0</div>
 
-        // DOM elements
-        const problemStatementElem = document.getElementById('problemStatement');
-        const questionTextElem = document.getElementById('questionText');
-        const inputGroupDiv = document.getElementById('inputGroup');
-        const solveBtn = document.getElementById('solveBtn');
-        const randomBtn = document.getElementById('randomProblemBtn');
-        const resultDisplay = document.getElementById('resultDisplay');
-        const animDescriptionSpan = document.getElementById('animDescription');
+  <!-- Mensaje final -->
+  <div id="finalMessage">🎉 ¡Felicidades! Has encontrado todas las palabras 🎉</div>
 
-        // extraer valores actuales de inputs (si están llenos) para la animación
-        function updateDynamicValuesFromInputs() {
-            if(!currentProblem) return;
-            const dyn = currentProblem.variableDinamica;
-            if(!dyn) return;
-            let fuerzaVal = 10, acelVal = 2, masaVal = 2;
-            if(dyn.tipo === "aceleracion") {
-                if(dyn.campoAceleracion) {
-                    let inputA = document.getElementById(`input_${dyn.campoAceleracion}`);
-                    if(inputA && inputA.value.trim() !== "") acelVal = Math.abs(parseFloat(inputA.value)) || 0.5;
-                }
-                if(dyn.campoMasa) {
-                    let inputM = document.getElementById(`input_${dyn.campoMasa}`);
-                    if(inputM && inputM.value.trim() !== "") masaVal = Math.abs(parseFloat(inputM.value)) || 1;
-                }
-                if(dyn.campoFuerza) {
-                    let inputF = document.getElementById(`input_${dyn.campoFuerza}`);
-                    if(inputF && inputF.value.trim() !== "") fuerzaVal = Math.abs(parseFloat(inputF.value)) || 2;
-                }
-                // para aceleración, usamos aceleración como factor principal
-                currentDynamicValues.aceleracion = Math.min(12, Math.max(0.2, acelVal));
-                currentDynamicValues.masa = Math.min(20, Math.max(0.5, masaVal));
-                currentDynamicValues.fuerza = fuerzaVal;
-            } 
-            else if(dyn.tipo === "fuerzaChoque" || dyn.tipo === "fuerzaContacto") {
-                let inputF = document.getElementById(`input_${dyn.campoFuerza}`);
-                if(inputF && inputF.value.trim() !== "") {
-                    let f = Math.abs(parseFloat(inputF.value));
-                    currentDynamicValues.fuerza = Math.min(80, Math.max(2, f));
-                } else {
-                    currentDynamicValues.fuerza = 20;
-                }
-            }
+  <script>
+    const palabras = [
+      "DESARROLLOTIPICO","DISCAPACIDAD","TRASTORNOSDEAPRENDIZAJE","OBSERVACION",
+      "NECESIDADES","FAMILIA","EVALUACION","ATIPICO","ESTRATEGIAS","AVANCES",
+      "RECURSOSVISUALES","PSICOLOGO","EVALUACIONCONTINUA","PARTICIPACION",
+      "APRENDIZAJE","INCLUSION"
+    ];
+    let puntos = 0;
+
+    const filas = 25, columnas = 25;
+    const sopa = Array.from({length: filas}, () => Array(columnas).fill(""));
+
+    // Direcciones posibles: derecha, abajo, diagonal
+    const direcciones = [
+      [0,1], [1,0], [1,1], [-1,1]
+    ];
+
+    // Colocar palabras aleatoriamente
+    function colocarPalabra(palabra) {
+      let colocada = false;
+      while (!colocada) {
+        const dir = direcciones[Math.floor(Math.random()*direcciones.length)];
+        const fila = Math.floor(Math.random()*filas);
+        const col = Math.floor(Math.random()*columnas);
+        let f = fila, c = col;
+        let valido = true;
+        for (let i=0; i<palabra.length; i++) {
+          if (f<0 || f>=filas || c<0 || c>=columnas || 
+              (sopa[f][c]!=="" && sopa[f][c]!==palabra[i])) {
+            valido = false;
+            break;
+          }
+          f += dir[0]; c += dir[1];
         }
-
-        // Llamar a la animación principal con valores dinámicos
-        function startAnimationWithCurrentValues() {
-            if(!currentProblem) return;
-            updateDynamicValuesFromInputs();
-            stopAnimation();
-            if(currentProblem.tipoAnimacion === "segunda") {
-                animateSecondLawDynamic();
-                animDescriptionSpan.innerHTML = "🍃 2da Ley · El movimiento del bloque refleja tu aceleración/ fuerza ingresada (mayor valor = más rápido)";
-            } else if(currentProblem.tipoAnimacion === "tercera_duendes") {
-                animateThirdDuendesDynamic();
-                animDescriptionSpan.innerHTML = "✨ Tercera Ley · La fuerza de choque entre duendes aumenta con el valor que ingresaste ✨";
-            } else if(currentProblem.tipoAnimacion === "tercera_contacto") {
-                animateThirdContactDynamic();
-                animDescriptionSpan.innerHTML = "🍄 Contacto · La intensidad del empujón varía según tu fuerza de contacto";
-            }
+        if (valido) {
+          f = fila; c = col;
+          for (let i=0; i<palabra.length; i++) {
+            sopa[f][c] = palabra[i];
+            f += dir[0]; c += dir[1];
+          }
+          colocada = true;
         }
+      }
+    }
 
-        // Animación Segunda Ley DINÁMICA : la amplitud del movimiento se basa en aceleración
-        function animateSecondLawDynamic() {
-            function draw() {
-                if(!ctx) return;
-                const w = canvas.width, h = canvas.height;
-                ctx.clearRect(0, 0, w, h);
-                let grad = ctx.createLinearGradient(0,0,0,h);
-                grad.addColorStop(0,"#bed6b3");
-                grad.addColorStop(1,"#9ab57a");
-                ctx.fillStyle = grad;
-                ctx.fillRect(0,0,w,h);
-                // pasto
-                for(let i=0;i<12;i++) {
-                    ctx.fillStyle = "#78a55a";
-                    ctx.beginPath();
-                    ctx.moveTo(i*40, h-50);
-                    ctx.lineTo(i*40+12, h-70);
-                    ctx.lineTo(i*40-12, h-70);
-                    ctx.fill();
-                }
-                // OBTENER FACTOR DE MOVIMIENTO desde la aceleración (usar valor actual)
-                let speedFactor = Math.min(2.2, Math.max(0.3, currentDynamicValues.aceleracion / 3.5));
-                let t = Date.now() * 0.008 * speedFactor;
-                let amplitudMov = Math.min(70, 25 + (currentDynamicValues.aceleracion * 3));
-                let bloqueX = w/2 - 45 + Math.sin(t) * (amplitudMov / 1.8);
-                bloqueX = Math.min(Math.max(bloqueX, 15), w-95);
-                
-                ctx.fillStyle = "#789D6F";
-                ctx.shadowBlur = 6;
-                ctx.fillRect(bloqueX, h-105, 80, 65);
-                ctx.fillStyle = "#EAD26F";
-                ctx.beginPath();
-                ctx.ellipse(bloqueX+40, h-80, 18, 22, 0, 0, Math.PI*2);
-                ctx.fill();
-                ctx.fillStyle = "#2c2c2c";
-                ctx.beginPath();
-                ctx.arc(bloqueX+28, h-84, 4, 0, Math.PI*2);
-                ctx.arc(bloqueX+52, h-84, 4, 0, Math.PI*2);
-                ctx.fill();
-                ctx.fillStyle = "#aa8e54";
-                ctx.fillRect(bloqueX+36, h-72, 8, 12);
-                // flecha fuerza con etiqueta dinámica
-                ctx.beginPath();
-                ctx.moveTo(bloqueX+90, h-80);
-                ctx.lineTo(bloqueX+130, h-80);
-                ctx.lineTo(bloqueX+122, h-87);
-                ctx.moveTo(bloqueX+130, h-80);
-                ctx.lineTo(bloqueX+122, h-73);
-                ctx.strokeStyle = "#F5BC70";
-                ctx.lineWidth = 3;
-                ctx.stroke();
-                ctx.fillStyle = "#FCB43A";
-                ctx.font = "bold 12px 'Quicksand'";
-                let fuerzaMostrar = currentDynamicValues.fuerza.toFixed(1);
-                let aMostrar = currentDynamicValues.aceleracion.toFixed(1);
-                ctx.fillText(`F ≈ ${fuerzaMostrar} N · a = ${aMostrar} m/s²`, bloqueX+85, h-92);
-                ctx.fillText("F = m·a", bloqueX+95, h-82);
-                // hojas voladoras dinámicas (más hojas si más aceleración)
-                let hojasCount = Math.floor(Math.min(6, 2 + currentDynamicValues.aceleracion / 2.5));
-                for(let i=0;i<hojasCount;i++) {
-                    ctx.fillStyle = `rgba(90,120,50,${0.5+Math.sin(t*2+i)*0.3})`;
-                    ctx.beginPath();
-                    ctx.ellipse(bloqueX+15+i*12, h-115+Math.sin(t*3)*8, 6,3,0,0,Math.PI*2);
-                    ctx.fill();
-                }
-                ctx.shadowBlur = 0;
-                animRequestId = requestAnimationFrame(draw);
-            }
-            draw();
+    palabras.forEach(p => colocarPalabra(p));
+
+    // Rellenar espacios vacíos con letras aleatorias
+    const letras = "ABCDEFGHIJKLMNOPQRSTUVWXYZ";
+    for (let i = 0; i < filas; i++) {
+      for (let j = 0; j < columnas; j++) {
+        if (sopa[i][j] === "") {
+          sopa[i][j] = letras[Math.floor(Math.random() * letras.length)];
         }
+      }
+    }
 
-        // Animación tercera ley DUENDES dinámica según fuerza ingresada
-        function animateThirdDuendesDynamic() {
-            function draw() {
-                const w = canvas.width, h = canvas.height;
-                ctx.clearRect(0,0,w,h);
-                ctx.fillStyle = "#afcb9a";
-                ctx.fillRect(0,0,w,h);
-                let fuerzaBase = Math.min(65, Math.max(8, currentDynamicValues.fuerza || 20));
-                let amplitud = 20 + (fuerzaBase / 3.5);
-                let t = Date.now() * 0.007;
-                let offset1 = Math.sin(t) * (amplitud);
-                let offset2 = Math.sin(t + Math.PI) * (amplitud);
-                let x1 = w/2-90+offset1;
-                let x2 = w/2+20+offset2;
-                x1 = Math.min(Math.max(x1,15),w-130);
-                x2 = Math.min(Math.max(x2,30),w-80);
-                // duendes
-                ctx.fillStyle = "#BD9A68";
-                ctx.shadowBlur = 4;
-                ctx.beginPath();
-                ctx.ellipse(x1+25, h/2-15, 23, 28, 0, 0, Math.PI*2);
-                ctx.fill();
-                ctx.fillStyle = "#FFFFFF";
-                ctx.beginPath();
-                ctx.arc(x1+15, h/2-25, 5, 0, Math.PI*2);
-                ctx.arc(x1+35, h/2-25, 5, 0, Math.PI*2);
-                ctx.fill();
-                ctx.fillStyle = "#403221";
-                ctx.fillRect(x1+20, h/2-10, 10, 15);
-                ctx.fillStyle = "#AF8E64";
-                ctx.beginPath();
-                ctx.ellipse(x2+25, h/2-15, 23, 28, 0, 0, Math.PI*2);
-                ctx.fill();
-                ctx.fillStyle = "#FFF";
-                ctx.beginPath();
-                ctx.arc(x2+15, h/2-25, 5, 0, Math.PI*2);
-                ctx.arc(x2+35, h/2-25, 5, 0, Math.PI*2);
-                ctx.fill();
-                if(Math.abs(x1+45 - x2) < 45) {
-                    ctx.fillStyle = "#f7bf4e";
-                    ctx.font = "bold 11px monospace";
-                    ctx.fillText(`✨ F_acción = ${fuerzaBase.toFixed(1)} N ✨`, w/2-85, 45);
-                    ctx.beginPath();
-                    ctx.moveTo(x1+43, h/2-20);
-                    ctx.lineTo(x2+10, h/2-20);
-                    ctx.lineTo(x2+2, h/2-28);
-                    ctx.moveTo(x2+10, h/2-20);
-                    ctx.lineTo(x2+2, h/2-12);
-                    ctx.strokeStyle = "#ffae42";
-                    ctx.lineWidth = Math.min(5, 2 + fuerzaBase/30);
-                    ctx.stroke();
-                }
-                ctx.shadowBlur = 0;
-                animRequestId = requestAnimationFrame(draw);
-            }
-            draw();
+    // Renderizar sopa
+    const tabla = document.getElementById("sopa");
+    sopa.forEach((fila, i) => {
+      const tr = document.createElement("tr");
+      fila.forEach((letra, j) => {
+        const td = document.createElement("td");
+        td.textContent = letra;
+        td.dataset.pos = i + "-" + j;
+        td.addEventListener("click", () => seleccionar(td));
+        tr.appendChild(td);
+      });
+      tabla.appendChild(tr);
+    });
+
+    // Selección y verificación
+    let seleccion = [];
+    function seleccionar(td) {
+      td.classList.toggle("selected");
+      seleccion.push(td.textContent);
+      const seleccionStr = seleccion.join("");
+      palabras.forEach(p => {
+        if (seleccionStr.includes(p)) {
+          marcarEncontrada(p);
+          seleccion = []; // reiniciar selección para evitar acumulación
         }
+      });
+    }
 
-        // Animación contacto dinámico (fuerza empuje variable)
-        function animateThirdContactDynamic() {
-            function draw() {
-                const w = canvas.width, h = canvas.height;
-                ctx.clearRect(0,0,w,h);
-                ctx.fillStyle = "#cbe6b5";
-                ctx.fillRect(0,0,w,h);
-                let fuerzaVal = Math.min(70, Math.max(5, currentDynamicValues.fuerza || 20));
-                let amplitudMov = 8 + (fuerzaVal / 12);
-                let t = Date.now() * 0.006;
-                let push = Math.sin(t) * amplitudMov;
-                let x1 = w/2-100 + push;
-                let x2 = w/2-20 + push;
-                x1 = Math.min(Math.max(x1,20),w-150);
-                x2 = Math.min(Math.max(x2, x1+70), w-90);
-                // Soot sprite
-                ctx.fillStyle = "#544F3F";
-                ctx.beginPath();
-                ctx.ellipse(x1+35, h-60, 32, 30, 0, 0, Math.PI*2);
-                ctx.fill();
-                ctx.fillStyle = "#fff9e0";
-                ctx.beginPath();
-                ctx.arc(x1+25, h-70, 6, 0, Math.PI*2);
-                ctx.arc(x1+45, h-70, 6, 0, Math.PI*2);
-                ctx.fill();
-                ctx.fillStyle = "#749C63";
-                ctx.beginPath();
-                ctx.ellipse(x2+35, h-62, 30, 35, 0, 0, Math.PI*2);
-                ctx.fill();
-                ctx.fillStyle = "#FCE5A8";
-                ctx.fillRect(x2+22, h-80, 26, 16);
-                ctx.fillStyle = "#2B2B2B";
-                ctx.beginPath();
-                ctx.arc(x2+25, h-70, 4, 0, Math.PI*2);
-                ctx.arc(x2+45, h-70, 4, 0, Math.PI*2);
-                ctx.fill();
-                let mid = (x1+70 + x2)/2;
-                ctx.beginPath();
-                ctx.moveTo(mid-12, h-75);
-                ctx.lineTo(mid+12, h-75);
-                ctx.lineTo(mid+4, h-82);
-                ctx.moveTo(mid+12, h-75);
-                ctx.lineTo(mid+4, h-68);
-                ctx.strokeStyle = "#F5B041";
-                ctx.lineWidth = Math.min(6, 2 + fuerzaVal/15);
-                ctx.stroke();
-                ctx.fillStyle = "#F2C55E";
-                ctx.font = "bold 10px sans-serif";
-                ctx.fillText(`¡F_contacto = ${fuerzaVal.toFixed(1)} N!`, mid-70, h-88);
-                animRequestId = requestAnimationFrame(draw);
-            }
-            draw();
-        }
-
-        function stopAnimation() {
-            if(animRequestId) {
-                cancelAnimationFrame(animRequestId);
-                animRequestId = null;
-            }
-        }
-
-        function renderInputs(problem) {
-            inputGroupDiv.innerHTML = '';
-            problem.campos.forEach(campo => {
-                const div = document.createElement('div');
-                div.className = 'field';
-                const label = document.createElement('label');
-                label.innerText = campo.label;
-                const input = document.createElement('input');
-                input.type = 'number';
-                input.step = 'any';
-                input.placeholder = campo.placeholder;
-                input.id = `input_${campo.nombre}`;
-                input.addEventListener('input', () => {
-                    // cuando el usuario escribe, actualizar dinámicamente animación
-                    updateDynamicValuesFromInputs();
-                    startAnimationWithCurrentValues();
-                });
-                div.appendChild(label);
-                div.appendChild(input);
-                inputGroupDiv.appendChild(div);
-            });
-        }
-
-        function updateProblemUI(problem) {
-            problemStatementElem.innerHTML = `<strong>📖 ${problem.ley}:</strong> ${problem.enunciado}`;
-            questionTextElem.innerHTML = `❓ ${problem.pregunta}`;
-            renderInputs(problem);
-            resultDisplay.innerHTML = '🍄 Introduce valores · La animación se mueve con tus números.';
-        }
-
-        function resolverActual() {
-            if(!currentProblem) return;
-            let vals = {};
-            let missing = false;
-            currentProblem.campos.forEach(campo => {
-                const inputElem = document.getElementById(`input_${campo.nombre}`);
-                if(inputElem && inputElem.value.trim() !== "") vals[campo.nombre] = inputElem.value.trim();
-                else missing = true;
-            });
-            if(missing) {
-                resultDisplay.innerHTML = "🌿 ¡Completa todos los campos antes de resolver! 🌿";
-                return;
-            }
-            const resultData = currentProblem.resolver(vals);
-            if(resultData === null) {
-                resultDisplay.innerHTML = "⚠️ Revisa los valores. ¡Incluso los espíritus revisan!";
-                return;
-            }
-            resultDisplay.innerHTML = `✅ <strong>${currentProblem.variableObjetivo}:</strong> ${resultData.resultado} ${resultData.unidad}<br>📐 ${resultData.formula}<br>🍃 ¡La animación reaccionó a tus números!`;
-        }
-
-        function setRandomProblem() {
-            const idx = Math.floor(Math.random() * PROBLEMS.length);
-            currentProblem = { ...PROBLEMS[idx] };
-            updateProblemUI(currentProblem);
-            // reset valores por defecto
-            currentDynamicValues = { fuerza: 12, aceleracion: 2.5, masa: 2 };
-            updateDynamicValuesFromInputs();
-            startAnimationWithCurrentValues();
-        }
-
-        solveBtn.addEventListener('click', resolverActual);
-        randomBtn.addEventListener('click', () => {
-            setRandomProblem();
-            resultDisplay.innerHTML = "🌟 Nuevo problema. ¡Anímate a cambiar valores y ver la animación! 🌟";
-        });
-        
-        setRandomProblem();
-    })();
-</script>
+    function marcarEncontrada(palabra) {
+      const li = document.querySelector(`#listaDefiniciones li[data-word="${palabra}"]`);
+      if (li && !li.classList.contains("completed")) {
+        li.classList.add("completed");
+        puntos++;
+        document.getElementById("score").textContent = "Puntos: " + puntos;
+      }
+      if (puntos === palabras.length) {
+        document.getElementById("finalMessage").style.display = "block";
+      }
+    }
+  </script>
 </body>
 </html>
